@@ -1,330 +1,331 @@
 # -*- coding: utf-8 -*-
+import os
 
+# Database configuration
 DB_NAME = 'database.db'
-MEDIA_FOLDER = 'media'
+DATABASES_FOLDER = os.path.join(os.path.dirname(__file__), 'databases')
+MEDIA_FOLDER = os.path.join(os.path.dirname(__file__), 'media')
 DOCUMENTATION_HTML = """
-        <html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Documentation</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; }
+        h1, h2 { color: #333; }
+        details { margin-bottom: 20px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; }
+        summary { cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+        code { background-color: #f4f4f4; padding: 2px 4px; border-radius: 4px; display: block; white-space: pre-wrap; }
+        .endpoint { margin-bottom: 20px; }
+        .method { font-weight: bold; color: #0066cc; }
+        .url { color: #009900; }
+    </style>
 </head>
 <body>
     <h1>API Documentation</h1>
 
-    <h2>CRUD Operations</h2>
-    <ul>
-        <li>
-            <strong>GET /api/crud/{table}</strong> - List all records
-            <p>Retrieve all records from the specified table.</p>
-            <p><strong>Headers:</strong> None</p>
-            <p><strong>Example:</strong> GET /api/crud/users</p>
-            <p><strong>Response:</strong>
-                <pre>
-{
-    "id": 1,
-    "name": "John Doe",
-    "email": "john.doe@example.com"
-}
-                </pre>
-            </p>
-        </li>
-        <li>
-            <strong>GET /api/crud/{table}/{id}</strong> - Get a specific record
-            <p>Retrieve a specific record by ID from the specified table.</p>
-            <p><strong>Headers:</strong> None</p>
-            <p><strong>Example:</strong> GET /api/crud/users/1</p>
-            <p><strong>Response:</strong>
-                <pre>
-{
-    "id": 1,
-    "name": "John Doe",
-    "email": "john.doe@example.com"
-}
-                </pre>
-            </p>
-        </li>
-        <li>
-            <strong>POST /api/crud/{table}</strong> - Create a new record
-            <p>Create a new record in the specified table.</p>
-            <p><strong>Headers:</strong> Content-Type: application/json</p>
-            <p><strong>Body:</strong>
-                <pre>
-{
-    "name": "John Doe",
-    "email": "john.doe@example.com"
-}
-                </pre>
-            </p>
-            <p><strong>Example:</strong> POST /api/crud/users</p>
-            <p><strong>Response:</strong>
-                <pre>
-{
-    "id": 1
-}
-                </pre>
-            </p>
-        </li>
-        <li>
-            <strong>PUT /api/crud/{table}/{id}</strong> - Update an existing record
-            <p>Update a specific record by ID in the specified table.</p>
-            <p><strong>Headers:</strong> Content-Type: application/json</p>
-            <p><strong>Body:</strong>
-                <pre>
-{
-    "name": "John Smith",
-    "email": "john.smith@example.com"
-}
-                </pre>
-            </p>
-            <p><strong>Example:</strong> PUT /api/crud/users/1</p>
-            <p><strong>Response:</strong>
-                <pre>
-{
-    "updated": 1
-}
-                </pre>
-            </p>
-        </li>
-        <li>
-            <strong>DELETE /api/crud/{table}/{id}</strong> - Delete a record
-            <p>Delete a specific record by ID from the specified table.</p>
-            <p><strong>Headers:</strong> None</p>
-            <p><strong>Example:</strong> DELETE /api/crud/users/1</p>
-            <p><strong>Response:</strong>
-                <pre>
-{
-    "deleted": 1
-}
-                </pre>
-            </p>
-        </li>
-    </ul>
+    <h2>General Information</h2>
+    <p>Base URL: <code>http://your-api-base-url.com/api</code></p>
+    <p>All requests should include the following headers:</p>
+    <code>
+Content-Type: application/json
+Code: 040800
+Database: your_database_name.db (except for /api/databases endpoint)
+    </code>
 
-    <h2>Database Import/Export</h2>
-    <ul>
-        <li>
-            <strong>POST /api/import</strong> - Import a database
-            <p>Import a new database. The database file must be base64 encoded.</p>
-            <p><strong>Headers:</strong> Content-Type: application/json</p>
-            <p><strong>Body:</strong>
-                <pre>
-{
-    "file": "base64_encoded_database_content"
-}
-                </pre>
-            </p>
-            <p><strong>Example:</strong> POST /api/import</p>
-            <p><strong>Response:</strong>
-                <pre>
-{
-    "message": "Database imported successfully"
-}
-                </pre>
-            </p>
-        </li>
-        <li>
-            <strong>GET /api/export</strong> - Export the current database
-            <p>Export the current database as a downloadable file.</p>
-            <p><strong>Headers:</strong> None</p>
-            <p><strong>Example:</strong> GET /api/export</p>
-            <p><strong>Response:</strong> The database file will be downloaded.</p>
-        </li>
-    </ul>
+    <details>
+        <summary>Database Operations</summary>
+        
+        <div class="endpoint">
+            <h3><span class="method">GET</span> <span class="url">/api/databases</span></h3>
+            <p>List all databases</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X GET \
+  http://your-api-base-url.com/api/databases \
+  -H 'Code: 040800'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+["database1.db", "database2.db", "database3.db"]
+            </code>
+        </div>
 
-    <h2>Media Service</h2>
-    <ul>
-        <li>
-            <strong>GET /api/media</strong> - List files in the media directory
-            <p>Retrieve a list of all files in the media directory.</p>
-            <p><strong>Headers:</strong> None</p>
-            <p><strong>Example:</strong> GET /api/media</p>
-            <p><strong>Response:</strong>
-                <pre>
+        <div class="endpoint">
+            <h3><span class="method">POST</span> <span class="url">/api/databases</span></h3>
+            <p>Create a new database</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X POST \
+  http://your-api-base-url.com/api/databases \
+  -H 'Code: 040800' \
+  -H 'Content-Type: application/json' \
+  -d '{"name": "new_database"}'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+{"message": "Database created successfully"}
+            </code>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method">PUT</span> <span class="url">/api/databases</span></h3>
+            <p>Update (rename) a database</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X PUT \
+  http://your-api-base-url.com/api/databases \
+  -H 'Code: 040800' \
+  -H 'Content-Type: application/json' \
+  -d '{"name": "old_database_name", "new_name": "new_database_name"}'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+{"message": "Database renamed successfully"}
+            </code>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method">DELETE</span> <span class="url">/api/databases</span></h3>
+            <p>Delete a database</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X DELETE \
+  http://your-api-base-url.com/api/databases \
+  -H 'Code: 040800' \
+  -H 'Content-Type: application/json' \
+  -d '{"name": "database_to_delete"}'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+{"message": "Database deleted successfully"}
+            </code>
+        </div>
+    </details>
+
+    <details>
+        <summary>CRUD Operations</summary>
+        
+        <div class="endpoint">
+            <h3><span class="method">GET</span> <span class="url">/api/crud/{table}</span></h3>
+            <p>Get all records from a table</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X GET \
+  http://your-api-base-url.com/api/crud/users \
+  -H 'Code: 040800' \
+  -H 'Database: mydatabase.db'
+            </code>
+            <h4>Example response:</h4>
+            <code>
 [
-    "file1.jpg",
-    "file2.png"
+  {"id": 1, "name": "John Doe", "email": "john@example.com"},
+  {"id": 2, "name": "Jane Smith", "email": "jane@example.com"}
 ]
-                </pre>
-            </p>
-        </li>
-        <li>
-            <strong>GET /api/media/{filename}</strong> - Get a specific file
-            <p>Retrieve a specific file from the media directory by its filename.</p>
-            <p><strong>Headers:</strong> None</p>
-            <p><strong>Example:</strong> GET /api/media/file1.jpg</p>
-            <p><strong>Response:</strong> The file will be downloaded.</p>
-        </li>
-        <li>
-            <strong>POST /api/media/{filename}</strong> - Upload a file
-            <p>Upload a new file to the media directory. The file content must be base64 encoded.</p>
-            <p><strong>Headers:</strong> Content-Type: application/json</p>
-            <p><strong>Body:</strong>
-                <pre>
-{
-    "file": "base64_encoded_file_content"
-}
-                </pre>
-            </p>
-            <p><strong>Example:</strong> POST /api/media/file1.jpg</p>
-            <p><strong>Response:</strong>
-                <pre>
-{
-    "message": "File uploaded successfully"
-}
-                </pre>
-            </p>
-        </li>
-        <li>
-            <strong>DELETE /api/media/{filename}</strong> - Delete a file
-            <p>Delete a specific file from the media directory by its filename.</p>
-            <p><strong>Headers:</strong> None</p>
-            <p><strong>Example:</strong> DELETE /api/media/file1.jpg</p>
-            <p><strong>Response:</strong>
-                <pre>
-{
-    "message": "File deleted successfully"
-}
-                </pre>
-            </p>
-        </li>
-    </ul>
+            </code>
+        </div>
 
-    <h2>SQL Query Endpoints</h2>
-    <ul>
-        <li>
-            <strong>POST /api/query</strong> - Execute a SELECT query
-            <p>Execute a SELECT SQL query on the database.</p>
-            <p><strong>Headers:</strong> Content-Type: application/json</p>
-            <p><strong>Body:</strong>
-                <pre>
-{
-    "query": "SELECT * FROM users WHERE age > 18"
-}
-                </pre>
-            </p>
-            <p><strong>Example:</strong> POST /api/query</p>
-            <p><strong>Response:</strong>
-                <pre>
-{
-    "results": [
-        {"id": 1, "name": "John Doe", "age": 30},
-        {"id": 2, "name": "Jane Smith", "age": 25}
-    ]
-}
-                </pre>
-            </p>
-            <p><strong>Note:</strong> This endpoint only allows SELECT queries for security reasons.</p>
-        </li>
-        <li>
-            <strong>POST /api/execute</strong> - Execute a modifying query
-            <p>Execute an SQL query that modifies the database (INSERT, UPDATE, DELETE).</p>
-            <p><strong>Headers:</strong> Content-Type: application/json</p>
-            <p><strong>Body:</strong>
-                <pre>
-{
-    "query": "INSERT INTO users (name, age) VALUES ('John Doe', 30)"
-}
-                </pre>
-            </p>
-            <p><strong>Example:</strong> POST /api/execute</p>
-            <p><strong>Response:</strong>
-                <pre>
-{
-    "message": "Query executed successfully",
-    "affected_rows": 1
-}
-                </pre>
-            </p>
-            <p><strong>Note:</strong> This endpoint does not allow SELECT queries. Use /api/query for SELECT operations.</p>
-        </li>
-    </ul>
+        <div class="endpoint">
+            <h3><span class="method">POST</span> <span class="url">/api/crud/{table}</span></h3>
+            <p>Create a new record</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X POST \
+  http://your-api-base-url.com/api/crud/users \
+  -H 'Code: 040800' \
+  -H 'Database: mydatabase.db' \
+  -H 'Content-Type: application/json' \
+  -d '{"name": "Alice Johnson", "email": "alice@example.com"}'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+{"id": 3}
+            </code>
+        </div>
 
-    <h2>Request and Response Format</h2>
-    <p>All requests and responses are in JSON format. The following headers are used for different types of requests:</p>
-    <ul>
-        <li><strong>Content-Type: application/json</strong> - This header is required for POST and PUT requests to specify that the request body contains JSON data.</li>
-    </ul>
+        <div class="endpoint">
+            <h3><span class="method">PUT</span> <span class="url">/api/crud/{table}/{id}</span></h3>
+            <p>Update a specific record</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X PUT \
+  http://your-api-base-url.com/api/crud/users/3 \
+  -H 'Code: 040800' \
+  -H 'Database: mydatabase.db' \
+  -H 'Content-Type: application/json' \
+  -d '{"name": "Alice Johnson Updated", "email": "alice.updated@example.com"}'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+{"updated": 1}
+            </code>
+        </div>
 
-    <h2>Example Requests</h2>
-    <h3>GET Request</h3>
-    <pre>
-GET /api/crud/users HTTP/1.1
-Host: localhost:8000
-    </pre>
+        <div class="endpoint">
+            <h3><span class="method">DELETE</span> <span class="url">/api/crud/{table}/{id}</span></h3>
+            <p>Delete a specific record</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X DELETE \
+  http://your-api-base-url.com/api/crud/users/3 \
+  -H 'Code: 040800' \
+  -H 'Database: mydatabase.db'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+{"deleted": 1}
+            </code>
+        </div>
+    </details>
 
-    <h3>POST Request</h3>
-    <pre>
-POST /api/crud/users HTTP/1.1
-Host: localhost:8000
-Content-Type: application/json
+    <details>
+        <summary>Database Import/Export</summary>
+        
+        <div class="endpoint">
+            <h3><span class="method">POST</span> <span class="url">/api/import</span></h3>
+            <p>Import a database file</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X POST \
+  http://your-api-base-url.com/api/import \
+  -H 'Code: 040800' \
+  -H 'Database: mydatabase.db' \
+  -H 'Content-Type: application/json' \
+  -d '{"file": "base64_encoded_file_data"}'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+{"message": "Database imported successfully"}
+            </code>
+        </div>
 
-{
-    "name": "Jane Doe",
-    "email": "jane.doe@example.com"
-}
-    </pre>
+        <div class="endpoint">
+            <h3><span class="method">GET</span> <span class="url">/api/export</span></h3>
+            <p>Export a database file</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X GET \
+  http://your-api-base-url.com/api/export \
+  -H 'Code: 040800' \
+  -H 'Database: mydatabase.db' \
+  --output mydatabase.db
+            </code>
+            <p>This will download the database file.</p>
+        </div>
+    </details>
 
-    <h3>PUT Request</h3>
-    <pre>
-PUT /api/crud/users/1 HTTP/1.1
-Host: localhost:8000
-Content-Type: application/json
+    <details>
+        <summary>Media Operations</summary>
+        
+        <div class="endpoint">
+            <h3><span class="method">GET</span> <span class="url">/api/media</span></h3>
+            <p>List all media files</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X GET \
+  http://your-api-base-url.com/api/media \
+  -H 'Code: 040800' \
+  -H 'Database: mydatabase.db'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+["image1.jpg", "document.pdf", "video.mp4"]
+            </code>
+        </div>
 
-{
-    "name": "Jane Smith",
-    "email": "jane.smith@example.com"
-}
-    </pre>
+        <div class="endpoint">
+            <h3><span class="method">POST</span> <span class="url">/api/media/{filename}</span></h3>
+            <p>Upload a media file</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X POST \
+  http://your-api-base-url.com/api/media/newimage.jpg \
+  -H 'Code: 040800' \
+  -H 'Database: mydatabase.db' \
+  -H 'Content-Type: image/jpeg' \
+  --data-binary '@/path/to/local/image.jpg'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+{"message": "File uploaded successfully"}
+            </code>
+        </div>
 
-    <h3>DELETE Request</h3>
-    <pre>
-DELETE /api/crud/users/1 HTTP/1.1
-Host: localhost:8000
-    </pre>
+        <div class="endpoint">
+            <h3><span class="method">GET</span> <span class="url">/api/media/{filename}</span></h3>
+            <p>Download a media file</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X GET \
+  http://your-api-base-url.com/api/media/image1.jpg \
+  -H 'Database: mydatabase.db' \
+  --output image1.jpg
+            </code>
+            <p>This will download the media file.</p>
+        </div>
 
-    <h3>SQL Query Request</h3>
-    <pre>
-POST /api/query HTTP/1.1
-Host: localhost:8000
-Content-Type: application/json
+        <div class="endpoint">
+            <h3><span class="method">DELETE</span> <span class="url">/api/media/{filename}</span></h3>
+            <p>Delete a media file</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X DELETE \
+  http://your-api-base-url.com/api/media/image1.jpg \
+  -H 'Code: 040800' \
+  -H 'Database: mydatabase.db'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+{"message": "File deleted successfully"}
+            </code>
+        </div>
+    </details>
 
-{
-    "query": "SELECT * FROM users WHERE age > 18"
-}
-    </pre>
+    <details>
+        <summary>Query Execution</summary>
+        
+        <div class="endpoint">
+            <h3><span class="method">POST</span> <span class="url">/api/query</span></h3>
+            <p>Execute a SELECT query</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X POST \
+  http://your-api-base-url.com/api/query \
+  -H 'Code: 040800' \
+  -H 'Database: mydatabase.db' \
+  -H 'Content-Type: application/json' \
+  -d '{"query": "SELECT * FROM users WHERE age > 18"}'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+[
+  {"id": 1, "name": "John Doe", "age": 30},
+  {"id": 2, "name": "Jane Smith", "age": 25}
+]
+            </code>
+        </div>
 
-    <h3>SQL Execute Request</h3>
-    <pre>
-POST /api/execute HTTP/1.1
-Host: localhost:8000
-Content-Type: application/json
+        <div class="endpoint">
+            <h3><span class="method">POST</span> <span class="url">/api/execute</span></h3>
+            <p>Execute a non-SELECT query</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X POST \
+  http://your-api-base-url.com/api/execute \
+  -H 'Code: 040800' \
+  -H 'Database: mydatabase.db' \
+  -H 'Content-Type: application/json' \
+  -d '{"query": "UPDATE users SET status = 'active' WHERE last_login > '2023-01-01'"}'
+            </code>
+            <h4>Example response:</h4>
+            <code>
+{"affected_rows": 5}
+            </code>
+        </div>
+    </details>
 
-{
-    "query": "INSERT INTO users (name, age) VALUES ('John Doe', 30)"
-}
-    </pre>
-
-    <h2>Handling Responses</h2>
-    <p>All responses from the API will be in JSON format. The response will include relevant data based on the request made. In case of an error, an appropriate HTTP status code and error message will be returned.</p>
-
-    <h2>Error Codes</h2>
-    <ul>
-        <li><strong>200 OK</strong> - The request was successful.</li>
-        <li><strong>201 Created</strong> - A new resource was successfully created (for POST requests).</li>
-        <li><strong>400 Bad Request</strong> - The request was invalid or cannot be served.</li>
-        <li><strong>404 Not Found</strong> - The requested resource could not be found.</li>
-        <li><strong>500 Internal Server Error</strong> - An error occurred on the server.</li>
-    </ul>
-
-    <h2>Security Considerations</h2>
-    <p>When using the SQL query endpoints, please keep the following security considerations in mind:</p>
-    <ul>
-        <li>The /api/query endpoint only allows SELECT queries to prevent unintended modifications to the database.</li>
-        <li>The /api/execute endpoint is designed for INSERT, UPDATE, and DELETE operations. It does not allow SELECT queries.</li>
-        <li>Always sanitize and validate user input before using it in SQL queries to prevent SQL injection attacks.</li>
-        <li>Consider implementing additional authentication and authorization measures to control access to these endpoints.</li>
-        <li>Monitor and log the usage of these endpoints to detect any potential misuse or security issues.</li>
-    </ul>
 </body>
 </html>
-
         """
