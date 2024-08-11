@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Updated API Documentation</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; }
+        h1, h2 { color: #333; }
+        details { margin-bottom: 20px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; }
+        summary { cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+        code { background-color: #f4f4f4; padding: 2px 4px; border-radius: 4px; display: block; white-space: pre-wrap; }
+        .endpoint { margin-bottom: 20px; }
+        .method { font-weight: bold; color: #0066cc; }
+        .url { color: #009900; }
+    </style>
+</head>
+<body>
+    <h1>Updated API Documentation</h1>
+
+    <h2>General Information</h2>
+    <p>All requests (except documentation) should include the following header:</p>
+    <code>Api-Password: *api password*</code>
+
+    <details>
+        <summary>Database Operations</summary>
+        
+        <p>All database operations require these additional headers (except the create and the list):</p>
+        <code>
+Database: *database name*<br>
+Database-Password: *database password*
+        </code>
+        
+        <div class="endpoint">
+            <h3><span class="method">POST</span> <span class="url">/db/query</span></h3>
+            <p>Execute a SELECT query</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X POST \
+  http://your-api-base-url.com/db/query \
+  -H 'Api-Password: your_api_password' \
+  -H 'Database: your_database' \
+  -H 'Database-Password: your_database_password' \
+  -H 'Content-Type: application/json' \
+  -d '{"query": "SELECT * FROM users WHERE age > 18"}'
+            </code>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method">POST</span> <span class="url">/db/execute</span></h3>
+            <p>Execute a non-SELECT query</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X POST \
+  http://your-api-base-url.com/db/execute \
+  -H 'Api-Password: your_api_password' \
+  -H 'Database: your_database' \
+  -H 'Database-Password: your_database_password' \
+  -H 'Content-Type: application/json' \
+  -d '{"query": "UPDATE users SET status = 'active' WHERE last_login > '2023-01-01'"}'
+            </code>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method">POST</span> <span class="url">/db/import</span></h3>
+            <p>Import a database file</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X POST \
+  http://your-api-base-url.com/db/import \
+  -H 'Api-Password: your_api_password' \
+  -H 'Database: your_database' \
+  -H 'Database-Password: your_database_password' \
+  -H 'Content-Type: application/json' \
+  -d '{"file": "base64_encoded_file_data"}'
+            </code>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method">GET</span> <span class="url">/db/export</span></h3>
+            <p>Export a database file</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X GET \
+  http://your-api-base-url.com/db/export \
+  -H 'Api-Password: your_api_password' \
+  -H 'Database: your_database' \
+  -H 'Database-Password: your_database_password' \
+  --output your_database.db
+            </code>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method">DELETE</span> <span class="url">/db/delete</span></h3>
+            <p>Delete a database</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X DELETE \
+  http://your-api-base-url.com/db/delete \
+  -H 'Api-Password: your_api_password' \
+  -H 'Database: your_database' \
+  -H 'Database-Password: your_database_password'
+            </code>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method">POST</span> <span class="url">/db/create</span></h3>
+            <p>Create a new empty database</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X POST \
+  http://your-api-base-url.com/db/create \
+  -H 'Api-Password: your_api_password' \
+  -H 'Content-Type: application/json' \
+  -d '{"name": "new_database", "password": "new_database_password"}'
+            </code>
+        </div>
+
+        <div class="endpoint">
+          <h3><span class="method">GET</span> <span class="url">/db/list</span></h3>
+          <p>List all databases</p>
+          <h4>Example request:</h4>
+          <code>
+curl -X GET \
+http://your-api-base-url.com/db/list \
+-H 'Api-Password: your_api_password'
+          </code>
+        </div>
+    </details>
+
+    <details>
+        <summary>Media Operations</summary>
+        
+        <div class="endpoint">
+            <h3><span class="method">GET</span> <span class="url">/media/{database_name}/{db_password}/{media_name}</span></h3>
+            <p>Serve a media file</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X GET \
+  http://your-api-base-url.com/media/your_database/your_db_password/image.jpg \
+  -H 'Api-Password: your_api_password' \
+  --output image.jpg
+            </code>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method">POST</span> <span class="url">/media/{database_name}/{db_password}/{media_name}</span></h3>
+            <p>Create a media file</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X POST \
+  http://your-api-base-url.com/media/your_database/your_db_password/new_image.jpg \
+  -H 'Api-Password: your_api_password' \
+  -H 'Content-Type: application/json' \
+  -d '{"base64": "base64_encoded_file_data", "visibility_hidden": false}'
+            </code>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method">DELETE</span> <span class="url">/media/{database_name}/{db_password}/{media_name}</span></h3>
+            <p>Delete a media file</p>
+            <h4>Example request:</h4>
+            <code>
+curl -X DELETE \
+  http://your-api-base-url.com/media/your_database/your_db_password/image_to_delete.jpg \
+  -H 'Api-Password: your_api_password'
+            </code>
+        </div>
+    </details>
+</body>
+</html>

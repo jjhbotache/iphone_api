@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
 import os
@@ -24,6 +25,7 @@ def dumps(obj):
         return 'null'
     else:
         raise TypeError(repr(obj) + " is not JSON serializable")
+
 
 def loads(s):
     return eval(s, {"true": True, "false": False, "null": None})
